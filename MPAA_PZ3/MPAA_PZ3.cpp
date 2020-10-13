@@ -4,7 +4,62 @@
 #include <iostream>
 #include <omp.h>
 
-const int n = 100;
+const int n = 10;
+
+void upperTriangleMatrix()
+{
+	int a[n][n];
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+		{
+			if (i == j)
+				a[i][j] = 9;
+			else if (i < j)
+				a[i][j] = 3;
+			else
+				a[i][j] = 0;
+		}
+		
+	int x[n];
+	int b[n];
+	int y[n];
+	int i;
+	int j;
+
+	for (int i = 0; i < n; i++)
+		x[i] = rand() % 10;
+
+	for (int i = 0; i < n; i++)
+		printf_s("%d", x[i]);
+
+	int threads = omp_get_max_threads();
+//#pragma omp parallel for private(i, j) num_threads(threads)
+	for (i = 0; i < n; i++)
+	{
+		int c = 0;
+		for (j = 0; j < n; j++)
+			c += a[i][j] * x[j];
+		b[i] = c;
+	}
+
+	for (i = 0; i < n; i++)
+	{
+		int c = 0;
+		for (j = 0; j < n; j++)
+			c += a[j][i] * b[j];
+		y[i] = c;
+	}
+
+	printf_s("\n b =");
+	for (int i = 0; i < n; i++)
+		printf_s(" %d", b[i]);
+
+	printf_s("\n y =");
+
+	for (int i = 0; i < n; i++)
+		printf_s(" %d", y[i]);
+}
 
 void matrix(int a[n][n], int b[n][n], int r[n][n])
 {
@@ -48,6 +103,7 @@ int main()
 			b[i][k] = g;
 		}
 
-	matrix(a, b, res);
-	matrixNorm(res);
+	//matrix(a, b, res);
+	//matrixNorm(res);
+	upperTriangleMatrix();
 }
